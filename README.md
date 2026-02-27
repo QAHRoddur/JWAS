@@ -40,5 +40,5 @@ Auto-generated notebooks from the JWAS.jl wiki (Julia cells preserved).
 
 ## Next Step
 
-Replace `<YOUR_GITHUB_USERNAME>/<YOUR_REPO>` in notebook badge links after pushing to GitHub.
+Notebook badges are configured for `QAHRoddur/JWAS`.
 Put custom input files under `data/` (e.g., `data/my_GRM.csv`).

@@ -338,7 +338,7 @@ function write_index(output_dir::String, converted::Vector{Tuple{String, String,
         end
     end
     write(io, "\n## Next Step\n\n")
-    write(io, "Replace `<YOUR_GITHUB_USERNAME>/<YOUR_REPO>` in notebook badge links after pushing to GitHub.\n")
+    write(io, "Notebook badges are configured for `QAHRoddur/JWAS`.\n")
     write(io, "Put custom input files under `$(DATA_DIR_NAME)/` (e.g., `$(DATA_DIR_NAME)/my_GRM.csv`).\n")
     write(index_path, String(take!(io)))
     return index_path
