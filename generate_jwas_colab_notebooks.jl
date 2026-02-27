@@ -191,6 +191,18 @@ function code_cell(source::String)
     )
 end
 
+function colab_examples_setup_cell()
+    setup = """
+    # One-time setup each Colab session
+    if !isdir("/content/JWAS")
+        run(`git clone https://github.com/QAHRoddur/JWAS.git /content/JWAS`)
+    end
+    cd("/content/JWAS/Examples")
+    pwd()  # should show /content/JWAS/Examples
+    """
+    return code_cell(strip(setup) * "\n")
+end
+
 function rewrite_custom_input_paths(code::AbstractString)
     rewritten = String(code)
 
@@ -241,8 +253,16 @@ function initial_cells(title::String, notebook_rel_path::String)
     ]
 end
 
-function build_notebook_from_markdown(md_text::String, title::String, rel_path::String)
+function build_notebook_from_markdown(
+    md_text::String,
+    title::String,
+    rel_path::String;
+    add_examples_setup::Bool=false,
+)
     cells = initial_cells(title, rel_path)
+    if add_examples_setup
+        push!(cells, colab_examples_setup_cell())
+    end
     segments = parse_markdown_fences(md_text)
 
     for (seg_type, lang, content) in segments
@@ -314,7 +334,12 @@ function convert_all_pages(wiki_dir::String, output_dir::String, repo_output_pre
         rel_path = replace(rel_path, "\\" => "/")
 
         md_text = read(md_file, String)
-        notebook_data = build_notebook_from_markdown(md_text, page_title, rel_path)
+        notebook_data = build_notebook_from_markdown(
+            md_text,
+            page_title,
+            rel_path;
+            add_examples_setup=(category_folder == "Examples"),
+        )
         write(notebook_path, JSON.json(notebook_data, 2))
         push!(converted, (page_title, notebook_path, category_folder))
     end
